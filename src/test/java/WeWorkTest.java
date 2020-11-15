@@ -28,10 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class WeWorkTest {
 
-    private static WebDriver driver = new ChromeDriver();
+    private static WebDriver driver ;
 
     static void needLogin() throws InterruptedException, IOException {
         //扫码登录，写入cookie
+        WebDriver driver = new ChromeDriver();driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.get("https://work.weixin.qq.com/wework_admin/frame");
         //sleep 15s
@@ -48,6 +49,7 @@ public class WeWorkTest {
         if (file.exists()) {
             //利用cookie复用session登录
             //增加隐式等待
+            driver = new ChromeDriver();
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.get("https://work.weixin.qq.com/wework_admin/frame");
             //读Cookies
@@ -62,6 +64,7 @@ public class WeWorkTest {
             driver.navigate().refresh();
         } else {
             needLogin();
+            System.out.println("重新获取cookie");
         }
     }
 
@@ -86,9 +89,9 @@ public class WeWorkTest {
     @Test
     void addMembers(){
         click(By.linkText("添加成员"));
-        sendKeys(By.name("username"), "seveniruby");
-        sendKeys(By.name("acctid"), "seveniruby");
-        sendKeys(By.name("mobile"), "15600534000");
+        sendKeys(By.name("username"), "第二个");
+        sendKeys(By.name("acctid"), "第二个");
+        sendKeys(By.name("mobile"), "15600534001");
         click(By.linkText("保存"));
     }
     @Test
@@ -98,15 +101,15 @@ public class WeWorkTest {
     @Test
     void departmentSearch() {
         click(By.id("menu_contacts"));
-        sendKeys(By.id("mem"), "工程效能");
-        String content = driver.findElement(By.cssSelector(".js_party_info")).getText();
+        sendKeys(By.id("memberSearchInput"), "工程效能");
+        String content = driver.findElement(By.cssSelector(".js_party_info")).getText();//取所有文本
         System.out.println(content);
         click(By.cssSelector(".ww_icon_AddMember"));
         content = driver.findElement(By.cssSelector(".js_party_info")).getText();
         System.out.println(content);
         assertTrue(content.contains("无任何成员"));
     }
-
+//封装复用
     void click(By by) {
         driver.findElement(by).click();
 
